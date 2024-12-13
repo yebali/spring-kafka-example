@@ -1,4 +1,4 @@
-package com.yebali.template
+package com.yebali.consumer
 
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles

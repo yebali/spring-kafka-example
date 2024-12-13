@@ -1,4 +1,4 @@
-package com.yebali.template
+package com.yebali.consumer
 
 import org.junit.jupiter.api.Test
 

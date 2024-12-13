@@ -9,8 +9,24 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create
+  kafka:
+    bootstrap-servers:
+      - 127.0.0.1:10000
+      - 127.0.0.1:10001
+      - 127.0.0.1:10002
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 # actuator
 management:
   server:
     port: 8081
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
+  endpoint:
+    health:
+      enabled: true
+      show-details: always

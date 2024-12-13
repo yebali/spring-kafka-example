@@ -1,10 +1,11 @@
 version: "3.8"
+
 services:
-  ### Kafka00
-  kafka00:
+  ### Kafka-0
+  kafka-0:
     image: bitnami/kafka:3.7.0
     restart: unless-stopped
-    container_name: kafka00
+    container_name: kafka-0
     ports:
       - '10000:9094'
     environment:
@@ -13,12 +14,12 @@ services:
       - KAFKA_CFG_BROKER_ID=0
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka00:9093,1@kafka01:9093,2@kafka02:9093
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       # Listeners
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka00:9092,EXTERNAL://127.0.0.1:10000
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-0:9092,EXTERNAL://127.0.0.1:10000
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -29,12 +30,13 @@ services:
     networks:
       - kafka_network
     volumes:
-      - "Kafka00:/bitnami/kafka"
-  ### Kafka01
-  kafka01:
+      - "Kafka-0:/bitnami/kafka"
+
+  ### Kafka-1
+  kafka-1:
     image: bitnami/kafka:3.7.0
     restart: unless-stopped
-    container_name: kafka01
+    container_name: kafka-1
     ports:
       - '10001:9094'
     environment:
@@ -43,12 +45,12 @@ services:
       - KAFKA_CFG_BROKER_ID=1
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka00:9093,1@kafka01:9093,2@kafka02:9093
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       # Listeners
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka01:9092,EXTERNAL://127.0.0.1:10001
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9092,EXTERNAL://127.0.0.1:10001
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -59,12 +61,13 @@ services:
     networks:
       - kafka_network
     volumes:
-      - "Kafka01:/bitnami/kafka"
-  ## Kafka02
-  kafka02:
+      - "Kafka-1:/bitnami/kafka"
+
+  ### Kafka-2
+  kafka-2:
     image: bitnami/kafka:3.7.0
     restart: unless-stopped
-    container_name: kafka02
+    container_name: kafka-2
     ports:
       - '10002:9094'
     environment:
@@ -73,12 +76,12 @@ services:
       - KAFKA_CFG_BROKER_ID=2
       - KAFKA_CFG_NODE_ID=2
       - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka00:9093,1@kafka01:9093,2@kafka02:9093
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       # Listeners
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka02:9092,EXTERNAL://127.0.0.1:10002
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9092,EXTERNAL://127.0.0.1:10002
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
@@ -89,7 +92,7 @@ services:
     networks:
       - kafka_network
     volumes:
-      - "Kafka02:/bitnami/kafka"
+      - "Kafka-2:/bitnami/kafka"
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -99,15 +102,15 @@ services:
       - '9090:8080'
     environment:
       - KAFKA_CLUSTERS_0_NAME=Local-Kraft-Cluster
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka00:9092,kafka01:9092,kafka02:9092
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-0:9092,kafka-1:9092,kafka-2:9092
       - DYNAMIC_CONFIG_ENABLED=true
       - KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED=true
       - KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED=true
       #- KAFKA_CLUSTERS_0_METRICS_PORT=9999
     depends_on:
-      - kafka00
-      - kafka01
-      - kafka02
+      - kafka-0
+      - kafka-1
+      - kafka-2
     networks:
       - kafka_network
 
@@ -115,6 +118,6 @@ networks:
   kafka_network:
 
 volumes:
-  Kafka00:
-  Kafka01:
-  Kafka02:
+  Kafka-0:
+  Kafka-1:
+  Kafka-2:

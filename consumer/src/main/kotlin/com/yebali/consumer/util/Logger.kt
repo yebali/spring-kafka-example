@@ -1,4 +1,4 @@
-package com.yebali.template.util
+package com.yebali.consumer.util
 
 import mu.KotlinLogging
 
